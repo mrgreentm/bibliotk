@@ -33,5 +33,6 @@ public class AuthService {
 
         userRepository.save(newUser);
     }
+    public void login() {}
 
 }
