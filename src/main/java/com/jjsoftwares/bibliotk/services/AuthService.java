@@ -1,20 +1,16 @@
 package com.jjsoftwares.bibliotk.services;
 
-import com.jjsoftwares.bibliotk.dtos.UserDTO;
+import com.jjsoftwares.bibliotk.dtos.CreateUserDTO;
 import com.jjsoftwares.bibliotk.entities.User;
 import com.jjsoftwares.bibliotk.repositories.UserRepository;
 import com.jjsoftwares.bibliotk.security.authentication.JwtTokenService;
 import com.jjsoftwares.bibliotk.security.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class AuthService {
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtTokenService jwtTokenService;
 
@@ -24,7 +20,7 @@ public class AuthService {
     @Autowired
     private SecurityConfig securityConfig;
 
-    public void createUser(UserDTO createUserDto) {
+    public void createUser(CreateUserDTO createUserDto) {
         User newUser = User.builder()
                 .email(createUserDto.email())
                 .password(securityConfig.passwordEncoder().encode(createUserDto.password()))
@@ -33,6 +29,4 @@ public class AuthService {
 
         userRepository.save(newUser);
     }
-    public void login() {}
-
 }

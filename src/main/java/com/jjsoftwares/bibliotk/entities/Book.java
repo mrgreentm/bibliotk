@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +19,6 @@ public class Book {
     @Column(nullable = false)
     private String category;
     @Column(nullable = false)
-    private String status;  // AVAILABLE, BORROWED
+    private String status;
 
 }

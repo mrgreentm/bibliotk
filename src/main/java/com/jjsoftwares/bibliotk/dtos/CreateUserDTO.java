@@ -1,6 +1,6 @@
 package com.jjsoftwares.bibliotk.dtos;
 
-public record UserDTO(
+public record CreateUserDTO(
         String username,
         String password,
         String email
