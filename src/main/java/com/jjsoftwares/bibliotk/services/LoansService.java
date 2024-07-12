@@ -1,11 +1,15 @@
 package com.jjsoftwares.bibliotk.services;
 
+import com.jjsoftwares.bibliotk.controllers.errorhandler.RestException;
 import com.jjsoftwares.bibliotk.dtos.CreateBookDTO;
 import com.jjsoftwares.bibliotk.dtos.CreateLoanDTO;
 import com.jjsoftwares.bibliotk.entities.Book;
 import com.jjsoftwares.bibliotk.entities.Loan;
+import com.jjsoftwares.bibliotk.entities.User;
 import com.jjsoftwares.bibliotk.repositories.BookRepository;
 import com.jjsoftwares.bibliotk.repositories.LoanRepository;
+import com.jjsoftwares.bibliotk.repositories.UserRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +22,20 @@ public class LoansService {
     private BookRepository bookRepository;
     @Autowired
     private LoanRepository loanRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @SneakyThrows
     public void createLoan(CreateLoanDTO createLoanDTO) {
         var book = verifyIfBookExists(createLoanDTO.bookId());
-        if(book.isPresent())
-            loanRepository.save(buildLoan(createLoanDTO));
-        else
-            throw new IllegalArgumentException("livro inexistente");
+        var user = verifyIfUserExists(createLoanDTO.userId());
+        if(user.isPresent()) {
+            if(book.isPresent())
+                loanRepository.save(buildLoan(createLoanDTO));
+            else
+                throw new RestException("livro inexistente");
+        } else throw new RestException("usuário inexistente");
+
     }
     private Optional<Book> verifyIfBookExists(Long bookId) {
         var book = this.bookRepository.findById(bookId);
@@ -31,6 +43,9 @@ public class LoansService {
             changeStatusBook(book);
         }
         return book;
+    }
+    private Optional<User> verifyIfUserExists(Long userId) {
+        return this.userRepository.findById(userId);
     }
 
     private void changeStatusBook(Optional<Book> book) {
