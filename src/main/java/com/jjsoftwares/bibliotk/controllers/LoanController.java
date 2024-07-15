@@ -31,4 +31,9 @@ public class LoanController {
         var loans = this.loansService.getLoansByUser(userId);
         return ResponseEntity.ok(loans);
     }
+    @DeleteMapping("/{loanId}")
+    public ResponseEntity<Void> deleteLoan(@PathVariable Long loanId) {
+        this.loansService.deleteLoan(loanId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

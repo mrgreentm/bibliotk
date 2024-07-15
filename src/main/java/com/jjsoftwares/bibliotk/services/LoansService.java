@@ -29,14 +29,20 @@ public class LoansService {
     private UserRepository userRepository;
 
     public void createLoan(CreateLoanDTO createLoanDTO) {
-        var book = verifyIfBookExists(createLoanDTO.bookId());
-        var user = verifyIfUserExists(createLoanDTO.userId());
+        var book = getBook(createLoanDTO.bookId());
+        var user = getUser(createLoanDTO.userId());
         if(verifyUser(user)) {
             processLoan(createLoanDTO, book);
         } else throw new RestException("usuário inexistente");
     }
-    public List<LoanBookDTO> getLoansByUser(Long id) {
-        return this.loanRepository.findAllLoansByUserId(id);
+    public List<LoanBookDTO> getLoansByUser(Long userId) {
+        if(this.verifyUser(this.getUser(userId))) {
+            return this.loanRepository.findAllLoansByUserId(userId);
+        }
+        throw new RestException("usuário inexistente");
+    }
+    public void deleteLoan(Long loanId) {
+        this.loanRepository.deleteById(loanId);
     }
 
     private void processLoan(CreateLoanDTO createLoanDTO, Optional<Book> book) {
@@ -48,13 +54,13 @@ public class LoansService {
         }
     }
 
-    private Optional<Book> verifyIfBookExists(Long bookId) {
+    private Optional<Book> getBook(Long bookId) {
         return this.bookRepository.findById(bookId);
     }
     private Boolean verifyUser(Optional<User> user) {
         return user.isPresent();
     }
-    private Optional<User> verifyIfUserExists(Long userId) {
+    private Optional<User> getUser(Long userId) {
         return this.userRepository.findById(userId);
     }
 

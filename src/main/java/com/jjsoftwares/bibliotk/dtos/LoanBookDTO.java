@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public record LoanBookDTO(
         Long loanId,
-        Long userId,
         Long bookId,
         LocalDate loanDate,
         LocalDate dueDate,
