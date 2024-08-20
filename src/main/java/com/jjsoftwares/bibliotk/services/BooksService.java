@@ -7,6 +7,8 @@ import com.jjsoftwares.bibliotk.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class BooksService {
@@ -16,6 +18,9 @@ public class BooksService {
         this.bookRepository.save(buildBook(createBookDTO));
     }
 
+    public List<Book> getAllBooks() {
+        return this.bookRepository.findAll();
+    }
     private Book buildBook(CreateBookDTO createBookDTO) {
         return Book
                 .builder()
