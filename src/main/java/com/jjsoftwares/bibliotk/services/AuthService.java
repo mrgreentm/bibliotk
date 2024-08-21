@@ -8,6 +8,8 @@ import com.jjsoftwares.bibliotk.security.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class AuthService {
@@ -28,5 +30,8 @@ public class AuthService {
                 .build();
 
         userRepository.save(newUser);
+    }
+    public Optional<User> getUserByName(String name) {
+        return this.userRepository.findByUsername(name);
     }
 }

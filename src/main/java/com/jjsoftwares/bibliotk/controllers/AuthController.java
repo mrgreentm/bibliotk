@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @RestController
@@ -33,10 +34,11 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public ResponseEntity<Map<String,String>> loginUser(@RequestBody @Valid LoginUserDTO loginUserDTO) {
+    public ResponseEntity<Map<String, Serializable>> loginUser(@RequestBody @Valid LoginUserDTO loginUserDTO) {
         var usernamePassoword = new UsernamePasswordAuthenticationToken(loginUserDTO.email(), loginUserDTO.password());
         var authentication = this.authenticationManager.authenticate(usernamePassoword);
         var token = this.tokenService.generateToken((UserDetailsImpl) authentication.getPrincipal());
-        return ResponseEntity.ok(Map.of("token", token));
+        var user = this.authService.getUserByName(loginUserDTO.email());
+        return ResponseEntity.ok(Map.of("token", token, "userId", user.get().getId()));
     }
 }
